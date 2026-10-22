@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" width="920" height="420">
+  <defs>
+    <linearGradient id="card-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="920" height="420" rx="16" fill="url(#card-bg)" stroke="#334155" stroke-width="2"/>
+
+  <!-- Card Header -->
+  <g transform="translate(40, 35)">
+    <rect width="840" height="50" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+    <text x="20" y="31" fill="#38bdf8" font-family="monospace" font-size="15" font-weight="700">## E04 — Full-Stack &amp; AI Automation Engineering Architecture</text>
+    <rect x="710" y="12" width="110" height="26" rx="6" fill="#0369a1"/>
+    <text x="765" y="29" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle">CONFIDENCE: HIGH</text>
+  </g>
+
+  <!-- Metadata Tags -->
+  <g transform="translate(40, 105)">
+    <text x="0" y="20" fill="#94a3b8" font-family="sans-serif" font-size="13" font-weight="700">Metadata Attributes:</text>
+    <rect x="150" y="4" width="90" height="24" rx="6" fill="#334155"/>
+    <text x="195" y="20" fill="#f1f5f9" font-family="monospace" font-size="11" text-anchor="middle">source: work</text>
+
+    <rect x="250" y="4" width="130" height="24" rx="6" fill="#334155"/>
+    <text x="315" y="20" fill="#f1f5f9" font-family="monospace" font-size="11" text-anchor="middle">domain: engineering</text>
+
+    <rect x="390" y="4" width="100" height="24" rx="6" fill="#334155"/>
+    <text x="440" y="20" fill="#f1f5f9" font-family="monospace" font-size="11" text-anchor="middle">status: current</text>
+
+    <rect x="500" y="4" width="130" height="24" rx="6" fill="#334155"/>
+    <text x="565" y="20" fill="#f1f5f9" font-family="monospace" font-size="11" text-anchor="middle">visibility: public</text>
+  </g>
+
+  <!-- Evidence Body -->
+  <g transform="translate(40, 155)">
+    <rect width="840" height="150" rx="8" fill="#0b1120" stroke="#1e293b" stroke-width="1"/>
+    <text x="25" y="32" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="600">Primary Evidence Summary:</text>
+    <text x="25" y="60" fill="#cbd5e1" font-family="sans-serif" font-size="13">• Designed and deployed AI-powered backend workflows integrating vector databases and LLM APIs.</text>
+    <text x="25" y="85" fill="#cbd5e1" font-family="sans-serif" font-size="13">• Implemented end-to-end automated pipelines, reducing evaluation latency by 45%.</text>
+    <text x="25" y="110" fill="#cbd5e1" font-family="sans-serif" font-size="13">• Built modular services with robust error handling, automated testing, and CI/CD integration.</text>
+    <text x="25" y="135" fill="#64748b" font-family="sans-serif" font-size="12">Key tech: Python, FastAPI, TypeScript, Dify, LangChain, PostgreSQL, Docker</text>
+  </g>
+
+  <!-- Semantic Boundary -->
+  <g transform="translate(40, 335)">
+    <rect width="840" height="45" rx="8" fill="#1c1917" stroke="#f97316" stroke-width="1.5" stroke-dasharray="6,4"/>
+    <text x="420" y="28" fill="#fb923c" font-family="monospace" font-size="14" font-weight="700" text-anchor="middle">===END EVIDENCE CARD===</text>
+  </g>
+</svg>

@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680" width="1100" height="680">
+  <defs>
+    <linearGradient id="arch-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="card-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="flow-line" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="soft-glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="680" rx="16" fill="url(#arch-bg)"/>
+
+  <!-- Title Section -->
+  <text x="50" y="50" fill="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="700">
+    Digital Twin System Architecture &amp; Data Pipeline
+  </text>
+  <text x="50" y="75" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14">
+    Decoupled Cognitive Layer (Minh Operating System) + Evidence Layer (Hybrid RAG) + Synthesis Engine
+  </text>
+
+  <!-- STEP 1: USER QUERY -->
+  <g transform="translate(420, 105)">
+    <rect width="260" height="60" rx="10" fill="url(#card-blue)" stroke="#38bdf8" stroke-width="2"/>
+    <text x="130" y="27" fill="#38bdf8" font-family="sans-serif" font-size="11" font-weight="700" text-anchor="middle" text-transform="uppercase">Input Stage</text>
+    <text x="130" y="47" fill="#ffffff" font-family="sans-serif" font-size="15" font-weight="600" text-anchor="middle">User Question / Query</text>
+  </g>
+
+  <!-- Connector Down -->
+  <line x1="550" y1="165" x2="550" y2="195" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,4"/>
+  <polygon points="550,205 545,195 555,195" fill="#38bdf8"/>
+
+  <!-- STEP 2: HYBRID SEARCH LAYER -->
+  <g transform="translate(180, 210)">
+    <rect width="740" height="110" rx="12" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
+    <text x="370" y="25" fill="#94a3b8" font-family="sans-serif" font-size="12" font-weight="700" text-anchor="middle" text-transform="uppercase">
+      Knowledge Retrieval Engine (Hybrid Search)
+    </text>
+
+    <!-- Branch A: Semantic -->
+    <rect x="40" y="40" width="310" height="52" rx="8" fill="#1e293b" stroke="#0ea5e9" stroke-width="1.2"/>
+    <text x="195" y="62" fill="#38bdf8" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Dense Vector Embedding</text>
+    <text x="195" y="80" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Semantic intent &amp; conceptual context</text>
+
+    <!-- Branch B: BM25 -->
+    <rect x="390" y="40" width="310" height="52" rx="8" fill="#1e293b" stroke="#a855f7" stroke-width="1.2"/>
+    <text x="545" y="62" fill="#c084fc" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">Sparse BM25 Keyword Search</text>
+    <text x="545" y="80" fill="#94a3b8" font-family="sans-serif" font-size="11" text-anchor="middle">Exact metrics, names, repos, tech terms</text>
+  </g>
+
+  <!-- Connector to Rerank -->
+  <line x1="550" y1="320" x2="550" y2="345" stroke="#818cf8" stroke-width="2"/>
+  <polygon points="550,355 545,345 555,345" fill="#818cf8"/>
+
+  <!-- STEP 3: RERANKING -->
+  <g transform="translate(380, 355)">
+    <rect width="340" height="50" rx="10" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5"/>
+    <text x="170" y="25" fill="#a5b4fc" font-family="sans-serif" font-size="13" font-weight="700" text-anchor="middle">
+      Cross-Encoder Reranker
+    </text>
+    <text x="170" y="42" fill="#c7d2fe" font-family="sans-serif" font-size="11" text-anchor="middle">
+      Cohere / BGE Rerank — Top-K = 5 Filtered Chunks
+    </text>
+  </g>
+
+  <!-- Connectors into Dual Layer -->
+  <path d="M 450,405 L 450,430 L 250,430 L 250,455" fill="none" stroke="#c084fc" stroke-width="2"/>
+  <polygon points="250,465 245,455 255,455" fill="#c084fc"/>
+
+  <path d="M 650,405 L 650,430 L 850,430 L 850,455" fill="none" stroke="#34d399" stroke-width="2"/>
+  <polygon points="850,465 845,455 855,455" fill="#34d399"/>
+
+  <!-- STEP 4: DUAL COGNITIVE LAYER -->
+  <!-- Left: Operating System -->
+  <g transform="translate(60, 465)">
+    <rect width="380" height="110" rx="10" fill="#18132c" stroke="#a855f7" stroke-width="1.8"/>
+    <text x="20" y="28" fill="#e9d5ff" font-family="sans-serif" font-size="14" font-weight="700">Minh's Operating System (System Prompt)</text>
+    <text x="20" y="50" fill="#a855f7" font-family="sans-serif" font-size="11" font-weight="600" text-transform="uppercase">Who Minh is &amp; How Minh thinks</text>
+    <text x="20" y="72" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Core engineering worldview &amp; problem solver</text>
+    <text x="20" y="90" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Decision-making &amp; communication principles</text>
+    <text x="20" y="108" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Strict boundaries: Zero hallucinations</text>
+  </g>
+
+  <!-- Right: Evidence Cards -->
+  <g transform="translate(660, 465)">
+    <rect width="380" height="110" rx="10" fill="#062e24" stroke="#10b981" stroke-width="1.8"/>
+    <text x="20" y="28" fill="#a7f3d0" font-family="sans-serif" font-size="14" font-weight="700">RAG Evidence Layer (Knowledge Base)</text>
+    <text x="20" y="50" fill="#34d399" font-family="sans-serif" font-size="11" font-weight="600" text-transform="uppercase">What Actually Happened</text>
+    <text x="20" y="72" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Concrete career milestones &amp; technical projects</text>
+    <text x="20" y="90" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Sourcing case studies, full-stack &amp; AI architectures</text>
+    <text x="20" y="108" fill="#cbd5e1" font-family="sans-serif" font-size="12">• Validated metrics, code repos &amp; contributions</text>
+  </g>
+
+  <!-- Connectors from Dual Layer into LLM Synthesis -->
+  <path d="M 250,575 L 250,600 L 460,600" fill="none" stroke="#a855f7" stroke-width="2"/>
+  <path d="M 850,575 L 850,600 L 640,600" fill="none" stroke="#10b981" stroke-width="2"/>
+
+  <!-- STEP 5: LLM SYNTHESIS & OUTPUT -->
+  <g transform="translate(430, 580)">
+    <rect width="240" height="65" rx="10" fill="#0284c7" stroke="#38bdf8" stroke-width="2" filter="url(#soft-glow)"/>
+    <text x="120" y="28" fill="#ffffff" font-family="sans-serif" font-size="15" font-weight="700" text-anchor="middle">LLM Synthesis Engine</text>
+    <text x="120" y="48" fill="#e0f2fe" font-family="sans-serif" font-size="12" font-weight="500" text-anchor="middle">Grounded, Accurate Answer</text>
+  </g>
+</svg>
