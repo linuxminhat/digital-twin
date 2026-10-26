@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digital-twin"
+version = "1.0.0"
+description = "Retrieval-grounded AI digital twin of Dang Nhat Minh: evidence-card chunking, hybrid BM25 + dense retrieval with RRF, reranking and hallucination guardrails."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Dang Nhat Minh", email = "dangnhatminhdhbk@gmail.com" }]
+dependencies = [
+    "numpy>=1.26",
+    "rank-bm25>=0.2.2",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+# Learned embeddings / cross-encoder reranking (DT_EMBEDDER=sentence-transformers, DT_RERANKER=bge)
+neural = ["sentence-transformers>=3.0"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.scripts]
+digital-twin = "src.cli:main"
+
+[tool.setuptools]
+packages = ["src", "evaluation"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

@@ -1,0 +1,12 @@
+# Runtime (mirrors [project.dependencies] in pyproject.toml)
+numpy>=1.26
+rank-bm25>=0.2.2
+pydantic>=2.6
+pyyaml>=6.0
+rich>=13.7
+
+# Development
+pytest>=8.0
+ruff>=0.6
+
+# Optional neural backends: pip install -e ".[neural]"
