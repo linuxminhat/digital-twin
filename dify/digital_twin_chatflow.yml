@@ -1,0 +1,239 @@
+# Dify Chatflow DSL — Minh's Digital Twin
+# Import: Dify Studio → Create App → Import DSL file → select this file.
+# After import, (1) bind the "Evidence Retrieval" node to your Knowledge Base built from
+# knowledge-base/minh-primary-evidence.md, and (2) confirm the LLM / rerank model
+# providers installed in your workspace. See dify/README.md.
+app:
+  description: Retrieval-grounded digital twin of Dang Nhat Minh. Hybrid retrieval + rerank over atomic evidence cards, Minh OS system prompt, cited answers and explicit refusal boundaries.
+  icon: "🧠"
+  icon_background: "#E0EAFF"
+  mode: advanced-chat
+  name: Minh Digital Twin
+  use_icon_as_answer_icon: false
+kind: app
+version: 0.3.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: "Hi, I'm Minh's digital twin. Ask me about his projects, engineering approach or credentials — every factual answer is cited to an evidence card."
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions:
+      - What did Minh build in ITSmartHire?
+      - How does Minh approach ambiguous engineering problems?
+      - Why does the digital twin use hybrid search?
+    suggested_questions_after_answer:
+      enabled: true
+    text_to_speech:
+      enabled: false
+  graph:
+    edges:
+      - id: start-retrieval
+        source: "start"
+        sourceHandle: source
+        target: "retrieval"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+        data: { sourceType: start, targetType: knowledge-retrieval, isInIteration: false }
+      - id: retrieval-os
+        source: "retrieval"
+        sourceHandle: source
+        target: "minh_os"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+        data: { sourceType: knowledge-retrieval, targetType: template-transform, isInIteration: false }
+      - id: os-llm
+        source: "minh_os"
+        sourceHandle: source
+        target: "llm"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+        data: { sourceType: template-transform, targetType: llm, isInIteration: false }
+      - id: llm-citations
+        source: "llm"
+        sourceHandle: source
+        target: "citations"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+        data: { sourceType: llm, targetType: code, isInIteration: false }
+      - id: citations-answer
+        source: "citations"
+        sourceHandle: source
+        target: "answer"
+        targetHandle: target
+        type: custom
+        zIndex: 0
+        data: { sourceType: code, targetType: answer, isInIteration: false }
+    nodes:
+      # 1 ─ Start ---------------------------------------------------------------
+      - id: "start"
+        type: custom
+        position: { x: 40, y: 280 }
+        width: 244
+        height: 54
+        data:
+          type: start
+          title: Start
+          desc: User question arrives as sys.query.
+          variables: []
+
+      # 2 ─ Knowledge Retrieval (Hybrid + Rerank) -------------------------------
+      - id: "retrieval"
+        type: custom
+        position: { x: 340, y: 280 }
+        width: 244
+        height: 92
+        data:
+          type: knowledge-retrieval
+          title: Evidence Retrieval (Hybrid + Rerank)
+          desc: >-
+            Hybrid search (dense vector + BM25 full-text) over evidence cards chunked on
+            ===END EVIDENCE CARD===, reranked by a cross-encoder, Top-K 5.
+          query_variable_selector: ["start", "sys.query"]
+          dataset_ids: []  # ← bind your Knowledge Base here after import
+          retrieval_mode: multiple
+          multiple_retrieval_config:
+            top_k: 5
+            score_threshold: null
+            reranking_enable: true
+            reranking_mode: reranking_model
+            reranking_model:
+              provider: langgenius/cohere/cohere
+              model: rerank-english-v3.0
+
+      # 3 ─ System Prompt (Minh OS) ---------------------------------------------
+      - id: "minh_os"
+        type: custom
+        position: { x: 640, y: 280 }
+        width: 244
+        height: 54
+        data:
+          type: template-transform
+          title: System Prompt (Minh OS)
+          desc: Canonical operating system prompt from prompts/minh-operating-system.md plus grounding rules.
+          variables: []
+          template: |
+            # Dang Nhat Minh — Digital Twin Operating System — Canonical v2.0
+
+            ## 0. Purpose & Meta-Directive
+            You are the official Digital Twin of Dang Nhat Minh (GitHub: @linuxminhat). Your purpose is to authentically and reliably represent Minh's professional identity, engineering philosophy, decision-making framework, problem-solving approach, and technical portfolio.
+            - Primary Directive: ground every factual claim in the retrieved evidence cards. Do not invent metrics, employers, project outcomes or credentials.
+            - Controlled Uncertainty: if a question falls outside the evidence, state the limitation instead of answering.
+            - Tone & Persona: articulate, analytical, pragmatic, builder-focused; humble yet confident in engineering reasoning.
+
+            ## 1. Problem Orientation & Operating Pattern
+            Understand Business Context → Model the Data & System → Isolate Bottlenecks → Prototype Lean MVP → Benchmark & Validate → Harden for Production.
+            1. First-principles thinking: deconstruct ambiguous problems to their foundational constraints before choosing tools.
+            2. Pragmatic technology choices: battle-tested technology where reliability matters; LLMs, RAG and agentic orchestration where they create real leverage.
+            3. Execution discipline: clean modular code, automated CI/CD and explicit observability over quick patches.
+
+            ## 2. Grounding & Citation Rules
+            1. Every factual sentence must end with the evidence card ID it comes from, e.g. [E02]. Card IDs are the "E.." codes in each card heading.
+            2. Opinions about engineering approach may draw on Section 1 and card E05; cite E05 when you do.
+            3. If no retrieved card supports the answer, reply exactly: "I do not have verified evidence regarding that specific detail in my knowledge base." Do not guess.
+            4. Never disclose private information (salary, address, phone numbers, confidential employer details).
+            5. Answer in the language of the question (Vietnamese or English).
+
+      # 4 ─ LLM Generation --------------------------------------------------------
+      - id: "llm"
+        type: custom
+        position: { x: 940, y: 280 }
+        width: 244
+        height: 98
+        data:
+          type: llm
+          title: LLM Generation
+          desc: Synthesises a grounded, cited answer from Minh OS + Top-5 evidence.
+          model:
+            provider: langgenius/anthropic/anthropic
+            name: claude-sonnet-5-5
+            mode: chat
+            completion_params:
+              temperature: 0.2
+              max_tokens: 1024
+          context:
+            enabled: true
+            variable_selector: ["retrieval", "result"]
+          prompt_template:
+            - id: system-prompt
+              role: system
+              text: |-
+                {{#minh_os.output#}}
+
+                ## Retrieved Evidence Cards
+                {{#context#}}
+          memory:
+            role_prefix: { user: "", assistant: "" }
+            query_prompt_template: "{{#sys.query#}}"
+            window:
+              enabled: true
+              size: 10
+          vision:
+            enabled: false
+
+      # 5 ─ Citation Formatter ---------------------------------------------------
+      - id: "citations"
+        type: custom
+        position: { x: 1240, y: 280 }
+        width: 244
+        height: 54
+        data:
+          type: code
+          title: Citation Formatter
+          desc: Validates [Exx] citations against retrieved cards and appends a Sources list.
+          code_language: python3
+          variables:
+            - variable: answer
+              value_selector: ["llm", "text"]
+            - variable: evidence
+              value_selector: ["retrieval", "result"]
+          outputs:
+            result:
+              type: string
+              children: null
+          code: |
+            import re
+
+            HEADING = re.compile(r"##\s+(E\d{2,})\s*[—:-]+\s*(.+)")
+
+
+            def main(answer: str, evidence: list) -> dict:
+                titles = {}
+                for chunk in evidence or []:
+                    content = chunk.get("content", "") if isinstance(chunk, dict) else str(chunk)
+                    m = HEADING.search(content)
+                    if m:
+                        titles[m.group(1)] = m.group(2).strip()
+                cited = list(dict.fromkeys(re.findall(r"\[(E\d{2,})\]", answer)))
+                # Drop citations to cards that were not actually retrieved.
+                for cid in cited:
+                    if cid not in titles:
+                        answer = answer.replace(f"[{cid}]", "")
+                valid = [c for c in cited if c in titles]
+                if valid:
+                    answer += "\n\n**Sources**\n" + "\n".join(f"- [{c}] {titles[c]}" for c in valid)
+                return {"result": answer}
+
+      # 6 ─ End (Answer) ----------------------------------------------------------
+      - id: "answer"
+        type: custom
+        position: { x: 1540, y: 280 }
+        width: 244
+        height: 103
+        data:
+          type: answer
+          title: End (Answer)
+          desc: Streams the cited answer to the user.
+          answer: "{{#citations.result#}}"
+          variables: []
