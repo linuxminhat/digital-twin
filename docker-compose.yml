@@ -1,0 +1,22 @@
+services:
+  # Interactive REPL:  docker compose run --rm twin
+  # One-shot query:    docker compose run --rm twin --query "What is ITSmartHire?"
+  twin:
+    build: .
+    image: digital-twin:latest
+    stdin_open: true
+    tty: true
+    command: []
+    volumes:
+      # Edit the knowledge base on the host without rebuilding.
+      - ./knowledge-base:/app/knowledge-base:ro
+
+  # Benchmark:  docker compose run --rm eval
+  eval:
+    image: digital-twin:latest
+    depends_on: [twin]
+    entrypoint: ["python", "-m", "evaluation.eval_runner"]
+    command: ["--min-recall", "0.9", "--min-rejection", "1.0", "--max-false-refusal", "0.1"]
+    volumes:
+      - ./knowledge-base:/app/knowledge-base:ro
+      - ./evaluation/benchmark_dataset.json:/app/evaluation/benchmark_dataset.json:ro
